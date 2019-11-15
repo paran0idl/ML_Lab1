@@ -1,11 +1,10 @@
 
 #linear regression
 mylin=function(X,Y, Xpred){
+  X1=cbind(1,X)
+  beta=solve(t(X1)%*%X1)%*%t(X1)%*%Y
   Xpred1=cbind(1,Xpred)
-  #print(Xpred1)
  #MISSING: check formulas for linear regression and compute beta
-  beta=solve(t(X)%*%X)%*%t(X)%*%Y
-  print(beta)
   Res=Xpred1%*%beta
   return(Res)
 }
@@ -37,23 +36,48 @@ myCV=function(X,Y,Nfolds){
             for (k in 1:Nfolds){
               #MISSING: compute which indices should belong to current fold
               current_feat=which(model==1)
-              X_Pred=X[,current_feat]
+              print(current_feat)
 			  #MISSING: implement cross-validation for model with features in "model" and iteration i.
-              res=mylin(X1,Y,X_Pred)
-              print(res)
+              #train_X=X1[((k-1)*9+1):(k*9),]
+              #train_X_Pred=train_X[,-current_feat]
+              #train_Y=Y1[((k-1)*9+1):(k*9)]
+              #return(mylin(train_X,train_Y,train_X_Pred))
+              begin_pos=(k-1)*9+1
+              if(k==Nfolds){
+                end_pos=length(Y1)
+              }else{
+                end_pos=k*9
+              }
+              #test_X=X1[((k-1)*9+1):(k*9),-current_feat]
+              test_X=X1[begin_pos:end_pos,current_feat]
+              #train_X=X1[-((k-1)*9+1):-(k*9),-current_feat]
+              train_X=X1[-begin_pos:-end_pos,current_feat]
+              #train_Y=Y1[-((k-1)*9+1):-(k*9)]
+              train_Y=Y1[-begin_pos:-end_pos]
+              
+              Ypred=mylin(train_X,train_Y,test_X)
+                            
 			  #MISSING: Get the predicted values for fold 'k', Ypred, and the original values for folf 'k', Yp.
-              Ypred=Y1-res
-              Yp=Y1
+
+              #Yp=Y1[((k-1)*9+1):(k*9)]
+              Yp=Y1[begin_pos:end_pos]
               SSE=SSE+sum((Ypred-Yp)^2)
             }
             curr=curr+1
             MSE[curr]=SSE/n
             Nfeat[curr]=sum(model)
             Features[[curr]]=model
-            
           }
-
   #MISSING: plot MSE against number of features
+  library(ggplot2)
+  #df<-data.frame(,y=MSE)
+  df<-data.frame(number=c(),MSE=c())
+  for(i in 1:length(Features)){
+    tmp=data.frame(number=sum(Features[[i]]),MSE=MSE[i])
+    df=rbind(df,tmp)
+  }
+  plot1<-ggplot(df,aes(x=number,y=MSE))+geom_point(shape=21)
+  #return(plot1)
   i=which.min(MSE)
   return(list(CV=MSE[i], Features=Features[[i]]))
 }
