@@ -36,7 +36,6 @@ myCV=function(X,Y,Nfolds){
             for (k in 1:Nfolds){
               #MISSING: compute which indices should belong to current fold
               current_feat=which(model==1)
-              print(current_feat)
 			  #MISSING: implement cross-validation for model with features in "model" and iteration i.
               #train_X=X1[((k-1)*9+1):(k*9),]
               #train_X_Pred=train_X[,-current_feat]
@@ -77,7 +76,7 @@ myCV=function(X,Y,Nfolds){
     df=rbind(df,tmp)
   }
   plot1<-ggplot(df,aes(x=number,y=MSE))+geom_point(shape=21)
-  #return(plot1)
+  return(plot1)
   i=which.min(MSE)
   return(list(CV=MSE[i], Features=Features[[i]]))
 }

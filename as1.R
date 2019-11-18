@@ -1,5 +1,5 @@
 library(openxlsx)
-data<-read.xlsx("spambase.xlsx")
+data<-read.xlsx("material/spambase.xlsx")
 n=dim(data)[1]
 set.seed(12345)
 id=sample(1:n, floor(n*0.5))
@@ -18,7 +18,7 @@ tp <- cft[2, 2]
 tn <- cft[1, 1]
 fp <- cft[2, 1]
 fn <- cft[1, 2]
-print(accuracy <- (tp + tn)/(tp + tn + fp + fn))
+print(accuracy <- 1-((tp + tn)/(tp + tn + fp + fn)))
 
 
 
