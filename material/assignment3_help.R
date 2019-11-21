@@ -76,7 +76,7 @@ myCV=function(X,Y,Nfolds){
     df=rbind(df,tmp)
   }
   plot1<-ggplot(df,aes(x=number,y=MSE))+geom_point(shape=21)
-  return(plot1)
+  #return(plot1)
   i=which.min(MSE)
   return(list(CV=MSE[i], Features=Features[[i]]))
 }
